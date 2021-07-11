@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>leetcode做题记录可视化</title>
+    <style>
+        .item {
+            width: 12px;
+            display: inline-block;
+        }
+        .progress {
+            display: inline-block;
+        }
+        .unit {
+            width: 12px;
+            height: 12px;
+        }
+        .h {
+            background-color: tomato;
+        }
+        .m {
+            background-color: gold;
+        }
+        .e {
+            background-color: yellowgreen;
+        }
+        .part {
+            position: relative;
+            font-size: 12px;
+        }
+        .part-tag {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            left: 50%;
+            color: #fff;
+        }
+        .top-tag {
+            color: #666;
+        }
+        .date {
+            color: #333;
+            width: 12px;
+            writing-mode: vertical-lr;
+            font-size: 12px;
+        }
+        #app {
+            display: inline-block;
+        }
+        body {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div v-for="item in res" :key="item.d" class="item">
+            <div class="progress">
+                <div class="part">
+                    <div>
+                        <div class="unit" v-for="n in 1"></div>
+                    </div>
+                    <div class="part-tag top-tag">{{item.q.h + item.q.m + item.q.e}}</div>
+                </div>
+                <div class="part" v-if="item.q.h != 0">
+                    <div>
+                        <div class="h unit" v-for="n in item.q.h"></div>
+                    </div>
+                    <div class="part-tag">{{item.q.h}}</div>
+                </div>
+                <div class="part" v-if="item.q.m != 0">
+                    <div>
+                        <div class="m unit" v-for="n in item.q.m"></div>
+                    </div>
+                    <div class="part-tag">{{item.q.m}}</div>
+                </div>
+                <div class="part" v-if="item.q.e != 0">
+                    <div>
+                        <div class="e unit" v-for="n in item.q.e"></div>
+                    </div>
+                    <div class="part-tag">{{item.q.e}}</div>
+                </div>
+            </div>
+            <div class="date">{{item.d}}</div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                res: []
+            }
+        })
+        function loadFile (path) {
+            const req = new XMLHttpRequest()
+            req.open('get', path)
+            req.send(null)
+            return new Promise((resolve, reject) => {
+                req.onload = function () {
+                    if (req.readyState === 4 && req.status === 200) {
+                        resolve(req.responseText)
+                    }
+                }
+            })
+        }
+        loadFile('./leetcode-data.txt')
+            .then((text) => {
+                text = text.split('|')
+                for (let i = 0; i < text.length; i++) {
+                    const t = text[i]
+                    let nt = ''
+                    for (let j = 0; j < t.length; j++) {
+                        if (t[j] == ' ') {
+                            continue
+                        }
+                        if (i % 3 === 0 && t[j] == '\n' && nt == '') {
+                            break
+                        }
+                        nt += t[j]
+                    }
+                    if (nt == '') {
+                        text.splice(i, 1)
+                        i--
+                        continue
+                    }
+                    text[i] = nt
+                }
+                const DATE = 0, QID = 1
+                const res = []
+                for (let i = 0; i < text.length; i += 3) {
+                    const r = {}
+                    const d = text[i + DATE]
+                    const q = text[i + QID].split('\n')
+                    r.d = d
+                    r.q = { e: 0, m: 0, h: 0 }
+                    q.forEach(qid => {
+                        r.q[qid[qid.length - 1]]++
+                    })
+                    res.push(r)
+                }
+                res.reverse()
+                app.res = res
+            })
+    </script>
+</body>
+</html>
