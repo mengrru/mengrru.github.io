@@ -4,7 +4,7 @@
 
 我从去年10月底开始做题，到今天断断续续做了79天一共202题。前69天记录了做题情况，如下图：
 
-<iframe src="./posts/2021-5-29/leetcode.html" width="100%" height="330" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
+<iframe src="./pages/posts/2021-5-29/leetcode.html" width="100%" height="330" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
 
 开始刷题前的水平是：只会做不需要任何经典算法知识的easy题，easy题有的也写不利索，几乎不会写任何常见基础算法。
 
